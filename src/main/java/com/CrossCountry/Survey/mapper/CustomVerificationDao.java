@@ -13,7 +13,7 @@ public interface CustomVerificationDao {
 			"       IP_ILLEGAL as ipRate, PORT_ILLEGAL as portRate, POLICY_ILLEGAL as scrRate from VIEW_QTTMCWARNING ")
 	public ZxSurveillanceLable getZxSurveillanceMsg();
 	
-	@Select("select sum(number1) as oneRegion, sum(number2) as twoRegion, sum(number3) as threeRegion from LSV_HGQKTJ_VIEW ")
+	@Select("select number1 as oneRegion, number2 as twoRegion, number3 as threeRegion from LSV_HGQKTJ_VIEW where name='纵向不合规数' ")
 	public SurveillanceRegionVO getSurveillanceRegionMsg();
 
 }
