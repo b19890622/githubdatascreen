@@ -54,7 +54,7 @@ public class DataScreenApplication implements CommandLineRunner{
     		if(args[0].indexOf("version") != -1){
     			System.out.println("Version:1.3.0_2018-12-12");
     		}
-    		//System.exit(0);
+    		System.exit(0);
     	}
 		StaticConfig.getDataCenterSetting();
 		StaticConfig.dbConnetction();
