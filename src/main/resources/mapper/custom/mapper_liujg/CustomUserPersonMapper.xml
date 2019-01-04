@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.CustomUserPesonDao">
+
+<select id="getUserInfoFirst" resultType="com.CrossCountry.Survey.modelvo.UserInfoVO" >
+	select per.username, per.phone from USER_PERSON per limit 1
+</select>
+
+<select id="getOnDutyPersion" resultType="com.CrossCountry.Survey.modelvo.liujg.OnDutyPersionVO" >
+	select a.position, a.name, b.photourl as photoUrl from OMS_DISPATCHERS a
+        left join OMS_PERSONPHOTOREL b on a.name = b.name limit 3
+</select>
+
+<select id="getRiskWarn" resultType="com.CrossCountry.Survey.modelvo.liujg.RiskWarnVO" >
+   <![CDATA[
+	select ALERTNUMBER as riskNo, ALERTLEVEL as riskLevel, RISKNAME as riskName
+   , ALERTRANGE as riskRange, ALERTTIME as riskRDate from OMS_ALERT_DATA where 
+   RISKNAME <> '' and ALERTRANGE <> '' and ALERTTIME is not null
+    order by ALERTTIME desc limit 100
+    ]]>
+</select>
+
+<select id="getRiskWarnCount" resultType="java.lang.Integer">
+	select count(1) from OMS_ALERT_DATA where 
+   RISKNAME is not null and ALERTRANGE is not null and ALERTTIME is not null
+</select>
+
+
+
+
+
+
+</mapper>

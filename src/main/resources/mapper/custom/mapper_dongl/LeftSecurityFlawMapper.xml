@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.dongl.LeftSecurityFlawDao">
+
+	<select id="getNumOneAreaLeftList"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.NumOneAreaLeftEntity">
+		SELECT NAME as flawLevel,COUNT as flawNum FROM LSV_HOLESCANDISTRIBUTEDCOUNT_VIEW WHERE SECURITYAREA='0'
+		
+
+	</select>
+
+	<select id="getNumTwoAreaLeftList"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.NumTwoAreaLeftEntity">
+		
+		SELECT NAME as flawLevel,COUNT as flawNum FROM LSV_HOLESCANDISTRIBUTEDCOUNT_VIEW WHERE SECURITYAREA='1'
+
+	</select>
+	
+	<select id="getThreeAreaLeftList"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.NumThreeAreaLeftEntity">
+		
+		SELECT NAME as flawLevel,COUNT as flawNum FROM LSV_HOLESCANDISTRIBUTEDCOUNT_VIEW WHERE SECURITYAREA='2'
+
+	</select>
+
+</mapper>

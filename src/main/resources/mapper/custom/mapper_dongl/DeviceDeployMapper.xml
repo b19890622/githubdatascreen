@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.dongl.DeviceDeployDao">
+
+	<select id="getDeviceList"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.DeviceDeployEntity">
+		<!--     默认排序 -->
+	<!-- select 
+        replace(replace(replace(a.province_name,'省调',''),'市调',''),'区调','') as stationName, 
+        (isnull(a.subnum,0) + isnull(a.localnum,0))                                            as stationNum, 
+        isnull(b.realDeployNum,0)                                                    as realDeployNum, 
+        isnull((b.realDeployNum+b.totalDeployNum),0)                                 as totalDeployNum 
+from 
+        LSV_PLATFORMNUM a 
+left join 
+        (
+        select 
+                province_name as name,
+                SUM(ACTUALNUM)  as realDeployNum, 
+                SUM(EXPECTNUM) as totalDeployNum 
+        from 
+                LSV_STATIONNUM 
+        GROUP BY 
+                province_name
+        ) 
+        b 
+on 
+        a.province_name = b.name 
+where 
+        a.level !=0 
+    and a.province_name not in ('华北分中心','华东分中心','华中分中心','东北分中心','西北分中心','西南分中心'); -->
+    
+    
+<!--     根据LSV_PROVINCE_REGIONAL_VIEW表进行排序 -->
+    select 
+        replace(replace(replace(c.stationName,'省调',''),'市调',''),'区调','') as stationName, 
+        c.stationNum                                                     as stationNum, 
+        c.realDeployNum                                                  as realDeployNum, 
+        c.totalDeployNum                                                 as totalDeployNum 
+from 
+        ( 
+        select 
+               replace(replace(replace(a.province_name,'省调',''),'市调',''),'区调','')  as stationName, 
+                (isnull(a.subnum,0) + isnull(a.localnum,0))                             as stationNum, 
+                isnull(b.realDeployNum,0)                   as realDeployNum, 
+                isnull((b.realDeployNum+b.totalDeployNum),0)    as totalDeployNum 
+        from 
+                LSV_PLATFORMNUM a 
+        left join 
+                ( 
+                select 
+                        province_name as name, 
+                        SUM(ACTUALNUM)  as realDeployNum, 
+                        SUM(EXPECTNUM) as totalDeployNum 
+                from 
+                        LSV_STATIONNUM 
+                GROUP BY 
+                        province_name 
+                ) 
+                b 
+        on 
+                a.province_name = b.name 
+        where 
+                a.level not in (0,1) 
+        ) 
+        c 
+right join 
+        ( 
+        select 
+                replace(replace(replace(name,'省调',''),'市调',''),'区调','') as name,
+                order_index 
+        from 
+                LSV_PROVINCE_REGIONAL_VIEW 
+        where 
+                name not in ('华北分中心','华东分中心','华中分中心','东北分中心','西北分中心','西南分中心')
+        order by 
+                order_index 
+        ) 
+        d 
+on 
+        c.stationName = d.name 
+         
+
+	</select>
+
+	<select id="getSubstationEntity"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.SubstationEntity">
+		<!-- select
+		Sum(ACTUALNUM) as subDeploy,Sum(EXPECTNUM) as subUndeploy,(Sum(ACTUALNUM)+Sum(EXPECTNUM))as subSum,
+		cast(Sum(ACTUALNUM)*1.0/(Sum(ACTUALNUM)+Sum(EXPECTNUM)) * 100 as numeric(18,1)) as subFinishRate
+		from
+		LSV_STATIONNUM 
+		where STATIONNAME = '3' -->
+		 select
+		Sum(ACTUALNUM) as subDeploy,Sum(EXPECTNUM) as subUndeploy,(Sum(ACTUALNUM)+Sum(EXPECTNUM))as subSum,
+		cast(cast(Sum(ACTUALNUM)*1.0/(Sum(ACTUALNUM)+Sum(EXPECTNUM)) * 100 as numeric(18,1))as varchar)+'%' as subFinishRate
+		from
+		LSV_STATIONNUM 
+		where STATIONNAME = '3' 
+		
+	</select>
+
+	<select id="getPowerPlantEntity"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.PowerPlantEntity">
+		<!-- select
+		Sum(ACTUALNUM) as powerDeploy,Sum(EXPECTNUM) as powerUndeploy,(Sum(ACTUALNUM)+Sum(EXPECTNUM))as powerSum,
+		cast(Sum(ACTUALNUM)*1.0/(Sum(ACTUALNUM)+Sum(EXPECTNUM)) * 100 as numeric(18,1))  as powerFinishRate
+		from
+		LSV_STATIONNUM 
+		WHERE STATIONNAME = '2' -->
+		
+		select
+		Sum(ACTUALNUM) as powerDeploy,Sum(EXPECTNUM) as powerUndeploy,(Sum(ACTUALNUM)+Sum(EXPECTNUM))as powerSum,
+		cast(cast(Sum(ACTUALNUM)*1.0/(Sum(ACTUALNUM)+Sum(EXPECTNUM)) * 100 as numeric(18,1))as varchar)+'%' as powerFinishRate
+		from
+		LSV_STATIONNUM 
+		WHERE STATIONNAME = '2'
+	</select>
+
+</mapper>

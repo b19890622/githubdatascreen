@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.dongl.SubStationAlarmDistributionDao">
+
+	<select id="getViewSubStationEntityList"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.ViewSubStationEntity">
+		
+		select 
+        deviceType, 
+        xdate, 
+        ISNULL(warnNum,0) as warnNum 
+from 
+        ( 
+        select 
+                decode (DISPATCHTYPE,2,'电厂',3,'变电站') as deviceType, 
+                WARNINGDATE                          as xdate, 
+                WARNING_NUM                          as warnNum 
+        from 
+                LSV_STATIONWARNINGINFO_VIEW 
+        where 
+                1=1 
+            <if test="curstart!=null and curend!=''">
+			and warningdate &gt;=#{curstart,jdbcType = VARCHAR}
+		</if>
+            <if test="curend!=null and curend!=''">
+			and warningdate &lt;=#{curend,jdbcType = VARCHAR}
+		</if>
+        )  
+order by 
+        xdate
+
+	</select>
+
+	
+
+
+
+</mapper>

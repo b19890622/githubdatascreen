@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.GaoJingDao">
+
+	<select id="getNumber" resultType="com.CrossCountry.Survey.modelvo.donggs.GuangKongNumber">
+		select
+		sum(case when MONITOROBJECT.MONITOROBJECTTYPE= 1 then 1 else 0 end) AS IDS,
+		sum(case when MONITOROBJECT.MONITOROBJECTTYPE= 0 then 1 else 0 end) AS FW,
+		sum(case when MONITOROBJECT.MONITOROBJECTTYPE= 4 then 1 else 0 end) AS FID,
+		sum(case when MONITOROBJECT.MONITOROBJECTTYPE= 5 then 1 else 0 end) AS BID,
+		sum(case when MONITOROBJECT.MONITOROBJECTTYPE= 6 and MONITOROBJECT.subtype= 1
+		then 1 else 0 end) AS VEAD
+		from MONITOROBJECT LEFT JOIN STATE_MONITOROBJECTTYPE_TABLE
+		ON MONITOROBJECT.MONITOROBJECTTYPE = STATE_MONITOROBJECTTYPE_TABLE.VALUE
+		where (STATE_MONITOROBJECTTYPE_TABLE.VALUE IN (0,1,4,5)
+		or (STATE_MONITOROBJECTTYPE_TABLE.VALUE = 6 and MONITOROBJECT.subtype = 1))
+		AND ISDELETE = 0
+	</select>
+
+
+
+</mapper>

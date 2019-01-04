@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.AlarmDistributionDao">
+
+	<select id="getEquipmentPo" resultType="com.CrossCountry.Survey.modelvo.donggs.AlarmDistributionEquipmentPo">
+	select 
+	SECURITYAREA AS alarmDistributionEquipmentName,
+    NUM AS alarmDistributionEquipmentNum
+    from LSV_LOCAL_DEVWARNINGNUM_VIEW
+	</select>
+	
+	<select id="getSafePo" resultType="com.CrossCountry.Survey.modelvo.donggs.AlarmDistributionSafePo">
+	select 
+	SECURITYAREA AS alarmDistributionSafeName,
+	NUM AS alarmDistributionSafeNum 
+	from LSV_SECURITYARAWARN_VIEW 
+	
+	</select>
+</mapper>

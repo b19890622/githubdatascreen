@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.SecureTopologyDao">
+
+	<select id="getAlarmNameAndNumber"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.AlarmNameAndNumber">
+		select REALTIME_WARNING.ID as
+		id,COUNT(REALTIME_WARNING.ID)as num ,MULTIPLEMONITOROBJECT.ip as
+		ip,DEVICENAME as devicename,nodename,max(WARNINGSTARTTIME) as warningState   
+		from REALTIME_WARNING,MULTIPLEMONITOROBJECT WHERE WARNINGLEVEL IN (0,1)
+		and REALTIME_WARNING.id = MULTIPLEMONITOROBJECT.id 
+		and WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		group by DEVICENAME,REALTIME_WARNING.id,MULTIPLEMONITOROBJECT.ip ,nodename
+	</select>
+	<select id="getPropertyDataAndOftenData"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.PropertyDataAndOftenData">
+		select MONITOROBJECTSTATUS.ID as
+		id,ip,MONITOROBJECTSTATUS.CPURATE as cpurate,MONITOROBJECTTYPE as
+		monitorobjecttype,CPUUPPERLIMIT as cpuupperlimit,MEMUPPERLIMIT as
+		memupperlimit, MEMRATE as memrate,SECURITYAREA as securityarea,
+		RUNSTATE as runstate  
+		FROM
+		MONITOROBJECT ,MONITOROBJECTSTATUS
+		where MONITOROBJECT.id = MONITOROBJECTSTATUS.id and
+		MONITOROBJECTTYPE IN (0,1,4,5,12) AND ISDELETE = 0
+	</select>
+	
+	<select id="getPropertyInDeviceReplyEntity"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.PropertyInDeviceReplyEntity">
+		select a.ip as swIp,UNKNOW_IP as inIp,TIME as time from UNKNOWDEVICEACCESSINFO b,MONITOROBJECT a 
+		WHERE IS_MONITOR = 1 and a.id = b.SW_ID and UNKNOW_IP is not null and UNKNOW_IP != ''
+		group by a.id,a.ip,SW_ID,UNKNOW_IP,TIME order by TIME DESC
+	</select>
+
+
+</mapper>

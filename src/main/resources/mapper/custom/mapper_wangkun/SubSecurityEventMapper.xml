@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.wangkun.LastSubSecurityEventDao">
+	<select id="getSubSecurityEventNum" resultType="java.lang.Long">	
+		SELECT COUNT (1)
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b 
+        WHERE 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 and b.CONFIRMSTATE != 2 and b.WARNINGLEVEL != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+     
+		<!--SELECT COUNT (1)
+		from 
+        ( 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime, 
+                CONTENT        as describe 
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REALTIME_WARNING b 
+        WHERE 
+                a.PLATFORMTYPE = b.PLATFORMTYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1  and b.CONFIRMSTATE != 3 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        union all 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime, 
+                CONTENT        as describe 
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b 
+        WHERE 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 and b.CONFIRMSTATE != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        )   -->
+		
+
+	</select>
+	
+	<select id="getSubSecurityEventToSolvedNum" resultType="java.lang.Long">	
+		SELECT COUNT (1)
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b 
+        WHERE 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 and b.CONFIRMSTATE != 2 and b.WARNINGLEVEL != 2  
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+		
+
+	</select>
+	
+	<select id="getSubSecurityEventToSolvedNumByCenter" 
+	resultType="com.CrossCountry.Survey.modelvo.shichf.ProvinceSecurityEventToSolvedNumVO">	
+		select mr.name as provinceName, cc.count as count from (SELECT  mj.MIDFID as MIDFID, count(b.PROVINCE_NAME) as count 
+        FROM 
+                 (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b,JSQY js,MONITOROBJECT mo,(
+                select distinct INDEXID,b.MIDFID as MIDFID from MAP_REGION a, (select distinct MIDFID from 
+                MAP_REGION) b 
+                where b.MIDFID = a.MIDFID and a.REGIONLEVEL = 1  
+                ) mj 
+        WHERE js.REGIONAL = mo.REGIONAL and b.Id = mo.ID and js.XZID = mj.INDEXID
+            and a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 and b.CONFIRMSTATE != 2  and b.WARNINGLEVEL != 2 
+           and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null'))) 
+            group by mj.MIDFID) cc,MAP_REGION mr where 
+			mr.REGIONLEVEL = 1 and mr.INDEXID = mr.MIDFID and mr.INDEXID = cc.MIDFID
+		
+
+	</select>
+	
+	<select id="getSubSecurityEventToSolvedNumByProvince" resultType=
+	"com.CrossCountry.Survey.modelvo.shichf.ProvinceSecurityEventToSolvedNumVO">	
+		select  mr.name as provinceName,cc.count as count from (
+		SELECT  mj.INDEXID as INDEXID, count(b.PROVINCE_NAME) as count 
+        FROM 
+                 (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b,JSQY js,MONITOROBJECT mo,(
+                select distinct INDEXID,b.MIDFID as MIDFID from MAP_REGION a, (select distinct MIDFID from 
+                MAP_REGION) b 
+                where b.MIDFID = a.MIDFID and a.REGIONLEVEL = 1 
+                and a.INDEXID != b.MIDFID  
+                ) mj 
+        WHERE js.REGIONAL = mo.REGIONAL and b.Id = mo.ID and js.XZID = mj.INDEXID 
+            and a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 and b.CONFIRMSTATE != 2  and b.WARNINGLEVEL != 2 
+           and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null'))) 
+            group by mj.INDEXID) cc,MAP_REGION mr where 
+			mr.REGIONLEVEL = 1 and mr.INDEXID != mr.MIDFID and mr.INDEXID = cc.INDEXID
+		
+
+	</select>
+	
+	<select id="getTopOneHundredEvent"
+		resultType="com.CrossCountry.Survey.modelvo.wangkun.SecurityEventVo">
+		SELECT 
+        log.PROVICENAME as proviceName, 
+        log.LOCALPROVICE  as localProvice, 
+        log.REMOTEPROVICE   as remoteProvice, 
+        log.DESCRIBE      as describe, 
+        log.warningTime   as warningTime, 
+        '' as warningSloveState
+from 
+        (  
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime,
+                CONTENT        as describe
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b 
+        WHERE 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1   and b.CONFIRMSTATE != 2  and b.WARNINGLEVEL != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        ) 
+        log 
+ORDER BY 
+        log.WARNINGTIME DESC LIMIT 100 OFFSET 0
+		<!--SELECT 
+        log.PROVICENAME as proviceName, 
+        log.LOCALPROVICE  as localProvice, 
+        log.REMOTEPROVICE   as remoteProvice, 
+        log.DESCRIBE      as describe, 
+        log.warningTime   as warningTime, 
+        '' as warningSloveState
+from 
+        ( 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime, 
+                CONTENT        as describe 
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REALTIME_WARNING b 
+        WHERE 
+                a.PLATFORMTYPE = b.PLATFORMTYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1   and b.CONFIRMSTATE != 3 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        union all 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime,
+                CONTENT        as describe
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b 
+        WHERE 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1   and b.CONFIRMSTATE != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        ) 
+        log 
+ORDER BY 
+        log.WARNINGTIME DESC LIMIT 100 OFFSET 0  -->
+
+	</select>
+	
+	<select id="getTopOneHundredEventByDisSub"
+		resultType="com.CrossCountry.Survey.modelvo.wangkun.SecurityEventVo">
+        	SELECT 
+        log.PROVICENAME as proviceName, 
+        log.LOCALPROVICE  as localProvice, 
+        log.REMOTEPROVICE   as remoteProvice, 
+        log.DESCRIBE      as describe, 
+        log.warningTime   as warningTime, 
+        '' as warningSloveState
+from 
+        ( 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime,
+                CONTENT        as describe
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b,STATE_NATIONAL_PLATFORM_INFO c 
+        WHERE b.PROVINCE_NAME = c.name and c.LEVEL != 1 
+            and 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1   and b.CONFIRMSTATE != 2  and b.WARNINGLEVEL != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        ) 
+        log 
+ORDER BY 
+        log.WARNINGTIME DESC LIMIT 100 OFFSET 0
+
+	</select>
+
+<select id="getSubSecurityEventNumByDisSub" resultType="java.lang.Long">	
+        SELECT COUNT (1)
+		from 
+        ( 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime, 
+                CONTENT        as describe 
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b,STATE_NATIONAL_PLATFORM_INFO c 
+        WHERE 	b.PROVINCE_NAME = c.name and c.LEVEL != 1 and 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1   and b.CONFIRMSTATE != 2  and b.WARNINGLEVEL != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        )     
+	</select>
+	
+	<select id="getSubSecurityEventSolvedNumByDisSub" resultType="java.lang.Long">	
+        SELECT COUNT (1)
+		from 
+        ( 
+        SELECT 
+                PROVINCE_NAME as proviceName, 
+                REMOTEPROVINCE  as remoteProvice, 
+                LOCALPROVINCE  as localProvice, 
+                WARNINGSTARTTIME    as warningTime, 
+                CONTENT        as describe 
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b,STATE_NATIONAL_PLATFORM_INFO c 
+        WHERE 	b.PROVINCE_NAME = c.name and c.LEVEL != 1 and 
+                a.PLATFORMTYPE = b.DEVICETYPE and b.CONFIRMSTATE != 2 and b.WARNINGLEVEL != 2 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+            		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null')))
+        )     
+	</select>
+</mapper>

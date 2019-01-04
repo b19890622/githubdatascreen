@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.CrossCountry.Survey.mapper.wangkun.DeviceWarnNumDao">
+    <select id="getAllDeviceWarnNums" resultType="com.CrossCountry.Survey.modelvo.wangkun.AllDeviceWarnVO">
+      select DEVICETYPE AS name,
+      NUM AS num
+      FROM  LSV_SUPSECURITYDEVNUM
+
+
+    </select>
+
+</mapper>

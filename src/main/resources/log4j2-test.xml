@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp" packages="">
+  <Appenders>
+    <RollingFile name="Rollinginfo" fileName="${sys:LOG_4J}/screen/screeninfo.log" immediateFlush = "false"
+                 filePattern="${sys:LOG_4J}/screen/$${date:yyyy-MM}/appinfo-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] [%F] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="300 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="20"/>
+    </RollingFile>
+    
+    <RollingFile name="Rollingwarn" fileName="${sys:LOG_4J}/screen/screenwarn.log" immediateFlush = "false"
+                 filePattern="${sys:LOG_4J}/screen/$${date:yyyy-MM}/appwarn-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] [%F] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="250 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="20"/>
+    </RollingFile>
+    
+    <RollingFile name="Rollingerror" fileName="${sys:LOG_4J}/screen/screenerror.log" immediateFlush = "true"
+                 filePattern="${sys:LOG_4J}/screen/$${date:yyyy-MM}/apperror-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} %class{36} [%t] [%F] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="250 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="20"/>
+    </RollingFile>
+    
+    <RollingFile name="Rollingfault" fileName="${sys:LOG_4J}/screen/screendefault.log" immediateFlush = "false"
+                 filePattern="${sys:LOG_4J}/screen/$${date:yyyy-MM}/appfault-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] [%F] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="250 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="20"/>
+    </RollingFile>
+    
+    <RollingFile name="Rollingsql" fileName="${sys:LOG_4J}/screen/screensql.log" immediateFlush = "false"
+                 filePattern="${sys:LOG_4J}/screen/$${date:yyyy-MM}/appsql-%d{MM-dd-yyyy}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] [%F] %m%n</Pattern>
+      </PatternLayout>
+      <Policies>
+        <TimeBasedTriggeringPolicy />
+        <SizeBasedTriggeringPolicy size="250 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="20"/>
+    </RollingFile>
+    
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %l %msg%n" />
+    </Console>
+    
+  </Appenders>
+  <Loggers>
+    <Root level="error" includeLocation ="true">
+      <AppenderRef ref="Rollingerror"/>
+    </Root>
+    <Logger name="com.CrossCountry.Survey.mapper" level = "DEBUG" additivity = "false" includeLocation ="true">
+       <AppenderRef ref = "Rollingsql" />
+    </Logger>
+    <Logger name = "log4j2_info" level = "INFO" additivity = "false" includeLocation ="true">  
+      <AppenderRef ref = "Rollinginfo" /> 
+    </Logger>
+    <Logger name = "log4j2_warn" level = "WARN" additivity = "false" includeLocation ="true">  
+      <AppenderRef ref = "Rollingwarn" /> 
+    </Logger>
+    <Logger name = "log4j2_default" level = "INFO" additivity = "false" includeLocation ="true">  
+      <AppenderRef ref = "Rollingfault" /> 
+    </Logger>
+    <Logger name="com.ibatis" level = "DEBUG" additivity = "false" includeLocation ="true">
+    </Logger>
+    <Logger name="com.ibatis.common.jdbc.SimpleDataSource" level = "DEBUG" additivity = "false" includeLocation ="true" />
+    <Logger name="com.ibatis.common.jdbc.ScriptRunner" level = "DEBUG" additivity = "false" includeLocation ="true" />
+    <Logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level = "DEBUG" additivity = "false" includeLocation ="true" />
+    <Logger name="Java.sql.Connection" level = "DEBUG" additivity = "false" includeLocation ="true" />
+    <Logger name="java.sql.Statement" level = "DEBUG" additivity = "false" includeLocation ="true" />
+    <Logger name="java.sql.PreparedStatement" level = "DEBUG" additivity = "false" includeLocation ="true" />
+  </Loggers>
+</Configuration>

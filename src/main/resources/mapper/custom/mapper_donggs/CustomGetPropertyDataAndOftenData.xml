@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.PropertyDataAndOftenDataDao">
+
+	<select id="getOftenData"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.OftenData">
+		select MONITOROBJECTSTATUS.ID as id,cpurate , memrate FROM MONITOROBJECT
+		,MONITOROBJECTSTATUS
+		where MONITOROBJECT.id = MONITOROBJECTSTATUS.id and
+		MONITOROBJECTTYPE IN (0,1,4,5,7,8,12,11) AND ISDELETE = 0
+	</select>
+	<select id="getPropertyData"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.PropertyData">
+		select
+		MONITOROBJECT.ID as id,ip,monitorobjecttype,cpuupperlimit,memupperlimit,decnamezh
+		from MONITOROBJECT LEFT JOIN STATE_MONITOROBJECTTYPE_TABLE
+		ON MONITOROBJECT.MONITOROBJECTTYPE = STATE_MONITOROBJECTTYPE_TABLE.VALUE
+		where STATE_MONITOROBJECTTYPE_TABLE.VALUE IN (0,1,4,5,7,8,12,11) AND
+		ISDELETE = 0
+	</select>
+
+
+</mapper>

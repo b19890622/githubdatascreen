@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.jiabo.VerificationCaseDao">
+    <select id="getVerificationCase" resultType="com.CrossCountry.Survey.modelvo.jiabo.VerificationCasePo">
+        SELECT
+                SUIDAO AS problemTunnel,
+                CELUE AS problemStrategy,
+                REPORTTIME AS cycleDate
+        FROM
+                LSV_HECHABIANJIE
+        ORDER BY
+                REPORTTIME DESC LIMIT 7
+    </select>
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.jiabo.SafetyRiskManageDao">
+    <select id="getSafetyRiskManage" resultType="com.CrossCountry.Survey.modelvo.jiabo.SafetyRiskManageAndTestPo">
+        SELECT
+                TOP 10
+                PROVINCE_NAME AS name,
+                TOTAL AS number
+        FROM
+                LSV_DISPOSETOP10_VIEW
+        ORDER BY
+                TOTAL DESC
+    </select>
+    <select id="getSafetyRiskManageAll" resultType="com.CrossCountry.Survey.modelvo.jiabo.SafetyRiskManageAndTestPo">
+        SELECT
+                TOP 10 NAME AS name,
+                0           AS number
+        FROM
+                LSV_PROVINCE_REGIONAL_VIEW
+        ORDER BY
+                ORDER_INDEX
+    </select>
+</mapper>

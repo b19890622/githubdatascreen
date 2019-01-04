@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.dongl.SafetyComplianceDao">
+
+	<select id="getSafetyComplianceSub"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.SafetyComplianceEntity">
+		select
+		c.ID,c.CHECKDIMEN,c.CHECKCOUNT
+		from
+		jsqy a,monitorobject b,DATA_UPREPORTCHECKAMOUNT_CACHE c,map_region d
+		where a.regional = b.regional and b.id = c.id and a.xzid = d.indexid  
+		<if test="name!=null and name !='' ">
+		and (
+		d.indexid = (SELECT INDEXID FROM map_region AA WHERE name = #{name,jdbcType=VARCHAR})) 
+		</if> 
+	</select>
+
+	<select id="getSafetyComplianceLocal"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.SafetyComplianceLocalVo">
+		select *
+		from view_checknum
+	</select>
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.shichf.ScreenSecuritySystemDeviceDataDao">
+    <resultMap id="BaseResulDeviceMap" type="com.CrossCountry.Survey.modelvo.shichf.SecuritySystemDeviceEntity" >
+        <result column="devicetype" property="devicetype" jdbcType="NUMERIC" />
+        <result column="devcount" property="devcount" jdbcType="NUMERIC" />
+    </resultMap>
+    <select id="getCheckTextOneCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM STATE_NATIONAL_PLATFORM_INFO a WHERE a.LEVEL = 3		
+    </select>
+     <select id="getSecuritySystemDeviceEntitys" resultMap="BaseResulDeviceMap">
+		select
+              REALTABLE.DEVICETYPE as devicetype,
+              SUM(REALTABLE.DEVCOUNT) as devcount 
+        from
+                ${table} AS REALTABLE,
+                (
+                select
+                        PROVINCE_NAME AS FLAG,
+                        MAX(reporttime)              AS MAXTIME
+                from
+                        ${table}
+                where 1=1 
+                <if test="name!=null and name !='' ">
+				AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} AND LOCAL_NAME in (SELECT NAME FROM map_region AA 
+				WHERE AA.FID IN 
+				(SELECT INDEXID FROM map_region AA WHERE name = #{name,jdbcType=VARCHAR})
+				)
+				</if>
+                group by
+                        PROVINCE_NAME
+                ) AS TEMPTABLE,
+                MONITOROBJECT MO,
+                MAP_REGION C1,
+                MAP_REGION C2
+        where
+                REALTABLE.PROVINCE_NAME = TEMPTABLE.FLAG
+            and REALTABLE.reporttime = TEMPTABLE.MAXTIME
+            AND MO.ISDELETE          = '0'
+            AND REALTABLE.ID         = MO.ID and REALTABLE.DEVICETYPE not in (19,20) 
+            AND REALTABLE.PROVINCE_NAME = C1.NAME
+            AND REALTABLE.LOCAL_NAME = C2.NAME
+        group by
+        DEVICETYPE
+	</select>
+	
+	<resultMap type="com.CrossCountry.Survey.modelvo.shichf.CascadeStatusAuditPo" id="customPlatformMonitoringList">
+        <result property="id" column="ID"/>
+        <result property="province" column="PROVINCE"/>
+        <result property="cities" column="CITIES"/>
+        <result property="dispatchlevel" column="DISPATCHLEVEL"/>
+    </resultMap>
+
+    <select id="getCustomPlatformMonitoring" resultMap="customPlatformMonitoringList">
+    SELECT 
+            SNPI.ID,
+            SNPI.FNAME AS PROVINCE,
+            SNPI.NAME AS CITIES,
+            SNPI.LEVEL AS DISPATCHLEVEL 
+        FROM
+            STATE_NATIONAL_PLATFORM_INFO SNPI
+        WHERE
+            SNPI.LEVEL != 0
+            <if test="name!=null and name !='' ">
+            AND FNAME = substring(#{name,jdbcType=VARCHAR},0,length(#{name,jdbcType=VARCHAR})-2)
+			AND NAME in (SELECT NAME FROM map_region AA 
+			WHERE AA.FID IN 
+			(SELECT INDEXID FROM map_region AA WHERE name = #{name,jdbcType=VARCHAR})
+			)
+			</if>
+            ORDER BY SNPI.SORTID
+    </select>
+    
+    <select id="getCustomPlatformMonitoringProvince" resultMap="customPlatformMonitoringList">
+    SELECT 
+            SNPI.ID,
+            SNPI.FNAME AS PROVINCE,
+            SNPI.NAME AS CITIES,
+            SNPI.LEVEL AS DISPATCHLEVEL 
+        FROM
+            STATE_NATIONAL_PLATFORM_INFO SNPI
+        WHERE
+            SNPI.LEVEL != 0
+            ORDER BY SNPI.SORTID
+    </select>
+</mapper>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.dongl.AlarmMonitorSubDao">
+
+
+	<select id="getMethod1AllNum" resultType="java.lang.Integer">
+		select sum(count) from (select sum(count) as count from (
+    	select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a,
+(select WARNINGLEVEL,PROVINCE_NAME,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REALTIME_WARNING) b 
+		where a.PLATFORMTYPE = b.PLATFORMTYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='外设接入'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE
+		union all
+		select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE)  a,
+                (select WARNINGLEVEL,PROVINCE_NAME,DEVICETYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REATTIME_SAFETYENENT) b 
+		where a.PLATFORMTYPE = b.DEVICETYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='外设接入'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE	
+		)
+		group by alarmType )
+	</select>
+	
+	<select id="getMethod2AllNum" resultType="java.lang.Integer">
+		select sum(count) from (select sum(count) as count from (
+    	select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a,
+(select WARNINGLEVEL,PROVINCE_NAME,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REALTIME_WARNING) b 
+		where a.PLATFORMTYPE = b.PLATFORMTYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='异常登录'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE
+		union all
+		select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE)  a,
+                (select WARNINGLEVEL,PROVINCE_NAME,DEVICETYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REATTIME_SAFETYENENT) b 
+		where a.PLATFORMTYPE = b.DEVICETYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='异常登录'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE	
+		)
+		group by alarmType )
+	</select>
+	
+	<select id="getMethod3AllNum" resultType="java.lang.Integer">
+		select sum(count) from (select sum(count) as count from (
+    	select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a,
+(select WARNINGLEVEL,PROVINCE_NAME,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REALTIME_WARNING) b 
+		where a.PLATFORMTYPE = b.PLATFORMTYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='高危操作'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE
+		union all
+		select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE)  a,
+                (select WARNINGLEVEL,PROVINCE_NAME,DEVICETYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REATTIME_SAFETYENENT) b 
+		where a.PLATFORMTYPE = b.DEVICETYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='高危操作'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE	
+		)
+		group by alarmType )
+	</select>
+	
+	<select id="getMethod4AllNum" resultType="java.lang.Integer">
+		select sum(count) from (select sum(count) as count from (
+    	select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a,
+(select WARNINGLEVEL,PROVINCE_NAME,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REALTIME_WARNING) b 
+		where a.PLATFORMTYPE = b.PLATFORMTYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='外部访问'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE
+		union all
+		select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  METHOD,ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE)  a,
+                (select WARNINGLEVEL,PROVINCE_NAME,DEVICETYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REATTIME_SAFETYENENT) b 
+		where a.PLATFORMTYPE = b.DEVICETYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE 
+		and a.METHOD ='外部访问'  and b.WARNINGLEVEL != 2 
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE	
+		)
+		group by alarmType )
+	</select>
+	
+	<select id="getMethod5AllNum" resultType="java.lang.Integer">
+	select count(1)
+from(
+select
+		CONTENT 
+		from
+		THREAT_GROUP_LOGSUBTYPE a,REALTIME_WARNING b
+		where
+		a.PLATFORMTYPE = b.PLATFORMTYPE
+		and
+		a.LOGTYPE = b.LOGTYPE 
+		and
+a.SUBLOGTYPE = b.SUBLOGTYPE
+and
+a.THREAT ='主站威胁' and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+union  ALL
+select
+		CONTENT 
+		from
+		THREAT_GROUP_LOGSUBTYPE a,REATTIME_SAFETYENENT b
+		where
+		a.PLATFORMTYPE = b.DEVICETYPE
+		and
+		a.LOGTYPE = b.LOGTYPE 
+		and
+a.SUBLOGTYPE = b.SUBLOGTYPE
+and
+a.THREAT ='主站威胁' and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+)
+	</select>
+	
+	<select id="getMethod6AllNum" resultType="java.lang.Integer">
+	select count(1)
+from(
+select
+		CONTENT 
+		from
+		THREAT_GROUP_LOGSUBTYPE a,REALTIME_WARNING b
+		where
+		a.PLATFORMTYPE = b.PLATFORMTYPE
+		and
+		a.LOGTYPE = b.LOGTYPE 
+		and
+a.SUBLOGTYPE = b.SUBLOGTYPE
+and
+a.THREAT ='外部威胁' and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+union  ALL
+select
+		CONTENT 
+		from
+		THREAT_GROUP_LOGSUBTYPE a,REATTIME_SAFETYENENT b
+		where
+		a.PLATFORMTYPE = b.DEVICETYPE
+		and
+		a.LOGTYPE = b.LOGTYPE 
+		and
+a.SUBLOGTYPE = b.SUBLOGTYPE
+and
+a.THREAT ='外部威胁' and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+)
+	</select>
+</mapper>

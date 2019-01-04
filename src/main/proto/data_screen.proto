@@ -1,0 +1,988 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.datascreen";
+option java_outer_classname = "DataScreenProto";
+option objc_class_prefix = "HLW";
+package datascreen;
+
+// The greeting service definition.
+service DataScreenService {
+	// Sends a greeting
+	rpc SayHello (HelloRequest) returns (HelloReply) {
+	}
+	//侧屏获取防火墙等数据
+	rpc getNumber (stream StateGridRequest) returns (stream NumberReply) {
+	}
+	//侧屏国调安全拓扑告警数和名，侧屏右侧
+	rpc getSecureTopology (stream StateGridRequest) returns (stream
+	SecureTopologyReply) {
+	}
+	// 侧屏拓扑图报警从哪到哪 国调中心 左侧
+	rpc getLargenTopology (stream StateGridRequest) returns (stream
+	LargenArrayProtobuf) {
+	}
+	//侧屏国调监视 线图左侧场站
+	rpc getMenaceMonitorProto (stream StateGridRequest) returns (stream
+	AllDateReply) {
+	}
+	// 国调告警监视 6个参数 外部威胁、主站威胁、外设接入、异常登录、高危操作、外部访问  add by dongl
+	rpc bidirectionalMainStation (stream StateGridRequest) returns (stream
+	RunStateReply) {
+	}
+	// 本级+下级全网告警监视 4个参数 外设接入、异常登录、高危操作、外部访问  add by dongl
+	rpc bidirectionalAllStation (stream StateGridRequest) returns (stream
+	RunAllStateReply) {
+	}
+	// 首页安全合规率  add by dongl
+	rpc bidirectionalSafetyCompliance (stream StateGridRequest) returns (stream
+	SafetyComplianceReply) {
+	};
+	// 侧屏在线率 密通率 2个饼状图图形 add by dongl
+	rpc bidirectionalOnlineRateAndSecretPassRate (stream StateGridRequest) returns
+	(stream OnlineRateAndSecretPassReply) {
+	}
+
+	//国调最新安全事件本级
+	rpc bidrectionalSecurityEvent (stream StateGridRequest) returns (stream
+	SecurityEventReply) {
+	}
+	//国调最新安全事件下级
+	rpc bidrectionalSubSecurityEvent (stream StateGridRequest) returns (stream
+	SecurityEventReply) {
+	}
+	//大屏地图  add shichf
+	rpc bidirectionalDrawingMapsFormat (stream StateGridRequest) returns (stream
+	DrawingMapsForParameters) {
+	}
+	// 大屏安防系统及设备在线状态 add shichf
+	rpc screenSecuritySystemState (stream StateGridRequest) returns (stream
+	SecuritySystemStateForParameters) {
+	}
+	// 大屏网络安全运行水平 add shichf
+	rpc screenSecretPassOnlineRate (stream StateGridRequest) returns (stream
+	ScreenSecretPassOnlineRateForParameters) {
+	}
+	// 当日安全风险top10 add shichf
+	rpc screenDayRiskTOPTen (stream StateGridRequest) returns (stream
+	ScreenDayRiskTOPTenForParameters) {
+	}
+	// 发生威胁单位top10 add shichf
+	rpc screenDayRiskUnitTOPTen (stream StateGridRequest) returns (stream
+	ScreenDayRiskTOPTenForParameters) {
+	}
+	//显示值班员
+	rpc getOnDutyPerson(stream StateGridRequest) returns (stream OnDutyPersion){}
+	//显示值班员
+	rpc getRiskWarning(stream StateGridRequest) returns (stream RiskWarningProto){}
+}
+//网络检测能力
+service DataScreenNetWorkCheckService {
+	// Sends a greeting
+	rpc SayHelloKitty (HelloRequest) returns (HelloReply) {}
+	//密通率及告警解决率 add jiabo
+	rpc bidirectionalSecretPassAndWarnSolve (stream StateGridRequest) returns (stream SecretPassAndWarnSolveReply) {}
+	//各类设备告警数量 wangkun
+	rpc bidGetAllDeviceNums(stream StateGridRequest) returns (stream AllDeviceNumsReplay){}
+	//平台装置部署 donguosheng
+	rpc getTerraceDeviceNumber (stream StateGridRequest) returns (stream TerraceDeviceNumberReply) {}
+	//各省厂站装置部署、厂站装置部署情况 add dongl
+	rpc bidrectionalDeviceDeploy(stream StateGridRequest)returns(stream DeviceDeployReply){}
+}
+//边界保护
+service DataScreenBorderProtectionService {
+	// Sends a greeting
+	rpc SayHelloKittyB (HelloRequest) returns (HelloReply) {}
+	// 隔离纵向显示
+	rpc getZxDeviceDisplay(stream StateGridRequest) returns (stream ZxDeviceWarnMsg) {}
+	// 获得一周趋势分析
+	rpc getTendencyOnWeekDisplay(stream StateGridRequest) returns (stream TendencyOnWeekMsg) {}
+	//总变更数目 wangkun
+	rpc bidGetChangeNum(stream StateGridRequest) returns(stream GetChangeNumReplay) {}
+	//告警审计top5
+	rpc bidGetTopFiveWarn(stream StateGridRequest) returns(stream GetTopFiveWarnReplay) {}
+	//近一周核查情况 add by jiabo
+	rpc bidirectionalVerificationCase(stream StateGridRequest) returns (stream VerificationCaseReply) {}
+	//各网省公司隧道、策略情况 add by jiabo
+	rpc bidirectionalTunnelAndStrategy(stream StateGridRequest) returns (stream TunnelAndStrategyReply) {}
+	//安全 防护体系
+	rpc bidGetProtectionNumber (stream StateGridRequest) returns (stream ProtectionNumberReply ) {}
+	// 安全设备数量
+	rpc bidGetEquipmentNumber (stream StateGridRequest) returns (stream EquipmentNumberReply) {}
+	//密通情况top10 add dongl
+	rpc bidrectionalSecretTopTen(stream StateGridRequest)returns(stream SecretTopTenReply){}
+	//安全事件分析 add dongl
+	rpc bidrectionalSecurityAnalasis(stream StateGridRequest)returns(stream SecurityAnalasisReply){}
+}
+
+//安全核查
+service DataScreenVerificationService {
+	// Sends a greeting
+	rpc SayHelloKittyC (HelloRequest) returns (HelloReply) {}
+
+	//纵向合规情况统计
+	rpc zxSurveillanceStat (stream StateGridRequest) returns(stream ZxSurveillanceMsg) {}
+	//合规情况统计
+	rpc surveillanceRegionStat (stream StateGridRequest) returns(stream SurveillanceRegionMsg) {}
+	//漏洞统计 四个圈 wangkun
+	rpc bidVulnerabilityCircle(stream StateGridRequest) returns (stream VulnerabilityCircleReply){}
+	//漏洞统计 列表  wangkun
+	rpc bidVulnerabilityList(stream StateGridRequest) returns (stream VulnerabilityListReply){}
+	//主机合规情况统计
+	rpc bidComplianceNameAndNum(stream StateGridRequest)returns(stream ComplianceReply){}
+	//合规详情及统计情况
+	rpc bidComplianceStatistics(stream StateGridRequest)returns(stream ComplianceStatisticsReply){}
+	//全网安全核查情况-地图外数据 add by jiabo
+	rpc bidrectionalNetSecurityVerifica(stream StateGridRequest)returns(stream NetSecurityVerificaReply){}
+	//全网安全核查情况-地图中数据 add by jiabo
+	rpc bidrectionalNetSecurityVerificaMap(stream StateGridRequest)returns(stream NetSecurityVerificaMapReply){}
+	//全网安全核查情况-top10 add by jiabo
+	rpc bidrectionalUnitsVerification(stream StateGridRequest)returns(stream UnitsVerificationReply){}
+	//I/II/III区漏洞 左图  add dongl
+	rpc bidrectionalLeftSecurityFlaw(stream StateGridRequest) returns(stream LeftSecurityFlawReply){}
+	//I/II/III区漏洞 右图  add dongl
+	rpc bidrectionalRightSecurityFlaw(stream StateGridRequest) returns(stream RightSecurityFlawReply){}
+}
+
+//安全告警监视
+service DataScreenSurveillanceService {
+	// Sends a greeting
+	rpc SayHelloKittyD (HelloRequest) returns (HelloReply) {}
+
+	//全网告警情况
+	rpc allNetWrokCompliance (stream StateGridRequest) returns(stream AllNetWorkMsg){}
+	//当日安全风险处置top10
+	rpc bidrectionalSafetyRiskManage(stream StateGridRequest)returns(stream SafetyRiskManageAndTestReply){}
+	//当日安全风险监测top10
+	rpc bidrectionalSafetyRiskTest(stream StateGridRequest)returns(stream SafetyRiskManageAndTestReply){}
+	//告警分布
+	rpc bidAlarmDistribution(stream StateGridRequest)returns(stream AlarmDistributionReply){}
+	//告警设备TOP5
+	rpc bidAlarmEquipmentTopFive(stream StateGridRequest)returns(stream AlarmEquipmentTopFiveReply){}
+	//主站告警分布 add dongl
+	rpc bidrectionalMainStationAlarmDistribution(stream StateGridRequest) returns(stream MainStationAlarmDistributionReply){}
+	//厂站告警分布 add dongl
+	rpc bidrectionalSubStationAlarmDistribution(stream StateGridRequest) returns(stream SubStationAlarmDistributionReply){}
+	//告警曲线  wangkun
+	rpc bidWarnFigure(stream StateGridRequest) returns (stream WarnFigureReply){}
+	// 安全风险监测    安全风险处置 （地图下方） wangkun
+	rpc bidSecurityRisk(stream StateGridRequest) returns(stream SecurityRiskReply){}
+	//安全风险处置
+	rpc bidSecurityRiskDeal(stream StateGridRequest) returns(stream SecurityRiskReply){}
+}
+//主机防护
+service DataScreenHostProtectionService{
+	rpc SayByeBye(stream StateGridRequest) returns(HelloReply){}
+	//硬件接口数量统计 和 外设接入监视  wangkun
+	rpc bidAccessMonitoring(stream StateGridRequest) returns(stream AccessMonitoringReplay){}
+	//高危服务监视   wangkun
+	rpc bidHighRiskSurveillance(stream StateGridRequest) returns (stream HighRiskSurveillanceReply) {}
+	//服务器工作站访问次数visitTimes
+	rpc bidVisitTimes (stream StateGridRequest) returns(stream VisitTimesReply){}
+	//访问管控
+	rpc bidAccessControls (stream StateGridRequest) returns(stream AccessControlsReply){}
+	//重要业务主机状态 add by jiabo
+	rpc bidrectionalImportantBusinessHostStatus(stream StateGridRequest)returns(stream ImportantBusinessHostStatusReply){}
+
+	//主机操作系统和agent统计
+	//rpc bidAgentCount(stream StateGridRequest) returns(stream AgentCountReply){}
+	//接入概况 add dongl
+	rpc bidInputSurvey(stream StateGridRequest)returns(stream InputReply){}
+	//安全核查统计 add dongl
+	rpc bidCheckCount(stream StateGridRequest)returns(stream CheckCountReply){}
+	//主机操作系统操作系统和agent操作统计  wangkun
+	rpc bidSystemAndAgentCount(stream StateGridRequest) returns (stream SystemAndAgentReply){}
+}
+
+
+
+// The request message containing the user's name.
+message HelloRequest {
+	string name = 1;
+}
+// The response message containing the greetings
+message HelloReply {
+	string message = 1;
+}
+
+message StateGridRequest {
+	string name =1;//撰取数据参数，省级区域的名字
+}
+//从MONITOROBJECT表中  取出MONITOROBJECTTYPE为0 1 4 5 6 的 数据 总和
+
+message NumberReply {
+	int32 IDS = 1; //MONITOROBJECT.MONITOROBJECTTYPE= 1
+	int32 FW = 2; //MONITOROBJECT.MONITOROBJECTTYPE= 0
+	int32 FID = 3; //MONITOROBJECT.MONITOROBJECTTYPE= 4
+	int32 BID = 4; //MONITOROBJECT.MONITOROBJECTTYPE= 5
+	int32 VEAD = 5; //MONITOROBJECT.MONITOROBJECTTYPE= 6
+}
+message SecureTopologyReply{
+	repeated  AlarmNameAndNumberReply alarmNameAndNumberArrayProtobuf = 1;
+	repeated  PropertyDataAndOftenReply propertyDataAndOftenArrayProtobuf = 2;
+	repeated  PropertyInDeviceReply propertyInDeviceReply = 3;// 接入设备
+}
+//--拓扑的告警数量 id 名字
+message AlarmNameAndNumberReply {
+	string id = 1;
+	string num = 2;
+	string ip = 3;
+	string devicename = 4;
+	string nodename = 5;
+	string warningState = 6;//0不画圈，1画圈
+
+}
+//安全拓扑的数据
+message PropertyDataAndOftenReply {
+	string id = 1;
+	string cpurate = 2;
+	string monitorobjecttype = 3;
+	string cpuupperlimit = 4;
+	string memupperlimit = 5;
+	string memrate = 6;
+	string securityarea = 7;
+	string ip =8;
+	string runstate = 9;//侧屏右侧拓扑图，增加设备时候离线状态（0离线，1在线，2未投入使用）
+}
+// 接入设备
+message PropertyInDeviceReply {
+	string swIp = 1; //交换机ip
+	repeated string inIp = 2; //接入设备ip
+}
+//威胁监视
+message MenaceMonitorReply {
+
+	repeated ChangeRedArrayProtobuf changeRedArrayProtobuf = 1;
+	repeated LargenArrayProtobuf LargenArrayProtobuf = 2;
+	repeated PowerArrayProtobuf powerArrayProtobuf = 3;
+	repeated RedWireArrayProtobuf redWireArrayProtobuf = 4;
+}
+
+//变红告警
+message ChangeRedArrayProtobuf {
+	string remark = 1; //告警时间 REALTIME_WARNING
+	string regional = 2; // 告警 id MONITOROBJECT id
+	string shortname = 3; //告警名字 MONITOROBJECT name
+	string voltageclas = 4;
+	string addOrNo = 5; //true 是有增加  flase 没有
+	string warningtime = 6;
+}
+//字体变大告警
+message LargenArrayProtobuf {
+
+	repeated  Remoteprovince remoteprovince = 1; // REALTIME_WARNING id
+
+}
+message Remoteprovince{
+	string remoteprovince =1;
+}
+
+message PowerArrayProtobuf {
+	string remark = 1; //jsqy  remark
+	string shortname = 2; //jsqy  shortname
+	string dispatchtype = 3; //类型 2 是 电厂 3 是 变电站 JSQY
+	string regional = 4;
+}
+//红线取QTTMCDEVINFO表中DEVICESTATE不等于1的数据
+message RedWireArrayProtobuf {
+	string shadowid = 1; // MULTIPLEMONITOROBJECT shadowid
+	string ip = 2; //MULTIPLEMONITOROBJECT  ip
+	string nodename = 3; //MULTIPLEMONITOROBJECT nodename
+	string devicestate = 4;
+	string regional =5;
+}
+message AllDateReply{
+	repeated AllDateArrayProtobuf allDateArrayProtobuf = 1;
+
+}
+message AllDateArrayProtobuf{
+	string remark = 1;
+	string regional = 2;//
+	string shortname = 3 ;
+	string voltageclas = 4;
+	string addOrNo = 5;//
+	string voltageclass = 6;
+	string remotelocal = 7;
+	string dispatchtype =8;
+	string shadowid = 9;
+	string ip = 10;
+	string nodename = 11;
+	string devicestate = 12;//
+	string warningtime = 13 ;
+	string warningType = 14;//告警类型，如果没有告警传空字符串''，如果有告警紧急传字符串0，重要传1
+
+}
+//密通率、在线率  add by dongl
+message OnlineRateAndSecretPassReply{
+	OnlineRateAndSecretPass onelineRateAndSecretPass =1 ;
+}
+
+message OnlineRateAndSecretPass{
+	string onlineRate= 1; //在线率 DATA_DEVONLINERATE_REAL表  sum(ONLINE)/sum(ONLINE+OFFLINE)
+	string onlineRateColor =2;//1:95以上用绿色;2:90-95字体和圆圈用黄色;3:90以下，字体和圆圈红色
+	string secretPass =3;//密通率 DATA_VEADENCRYPTEDRATE_REAL表   SUM(ENCRYPTPACKAGE) / (SUM(DECRYPTPACKAGE) + SUM(ENCRYPTPACKAGE))
+	string secretPassColor =4;//1:95以上用绿色;2:90-95字体和圆圈用黄色;3:90以下，字体和圆圈红色
+}
+//安全合规率  add by dongl
+message SafetyComplianceReply{
+	SafetyCompliance safetyCompliance = 1;
+}
+//安全合规率 对应视图 VIEW_CHECKNUM 10个字段  add by dongl
+message SafetyCompliance{
+	int32 CVSLegalNum =1 ; //基线核查合规项个数   VIEW_CHECKNUM  CVSLEGALNUM
+	int32 CVSIlegalNum =2 ; //基线核查不合规项个数   VIEW_CHECKNUM  CVSILEGALNUM
+	int32 VBSNum = 3 ; //漏洞扫描主机设备个数  VIEW_CHECKNUM  VBSNUM
+	int32 VBSIlegalNum =4;//漏洞扫描不合规主机设备个数 VIEW_CHECKNUM VBSILEGALNUM
+	int32 UserCheckNum =5 ; //弱口令扫描主机数 VIEW_CHECKNUM USERCHECKNUM
+	int32 UserCheckIlegalNum =6;//弱口令扫描不合规主机数 VIEW_CHECKNUM USERCHECKILEGALNUM
+	int32 VEADTunnelNum = 7;//核查纵向隧道数 VIEW_CHECKNUM VEADTUNNELNUM
+	int32 VEADPolicyNum = 8;//核查纵向策略数 VIEW_CHECKNUM VEADPOLICYNUM
+	int32 VEADIlegalTunnelNum = 9;//核查纵向问题隧道数 VIEW_CHECKNUM VEADILEGALTUNNELNUM
+	int32 VEADIlegalPolicyNum = 10;//核查纵向问题策略数 VIEW_CHECKNUM VEADILEGALPOLICYNUM
+}
+
+// 国调告警监视本级  add by dongl
+message RunStateReply  {
+	AlarmMonitorVO alrmMonitor = 1;
+}
+
+//国调 告警监视本级  add by dongl  本级THREAT_GROUP_LOGSUBTYPE,REALTIME_WARNING连表查询
+message AlarmMonitorVO{
+	int32 outThreatLocal = 1; //外部威胁
+	int32 innerThreatLocal = 2; //主站威胁
+	int32 externalDeviceLocal =3; //外设接入
+	int32 exceptionLoginLocal = 4; //异常登录
+	int32 dangerhandleLocal =5; //高危操作
+	int32 outVisitLocal = 6;//外部访问
+}
+
+//全网告警监视  add by dongl
+message RunAllStateReply{
+	AlarmMonitorAll alrmMonitorAll = 1;
+}
+//全网告警监视  add by dongl 全网=下级+下级  下级:THREAT_GROUP_LOGSUBTYPE,REATTIME_SAFETYENENT连表查询
+message AlarmMonitorAll{
+	int32 outThreatAll = 1;//外部威胁
+	int32 innerThreatAll = 2;//主站威胁
+	int32 externalDeviceAll = 3;//外设接入
+	int32 exceptionLoginAll = 4;//异常登录
+	int32 dangerhandleAll =5;//高危操作
+	int32 outVisitAll =6; //外部访问
+	string name = 7;//标题啊名称显示全网名称还是下级名称
+}
+
+// The response message containing the greetings
+
+
+
+//安全事件本级结果返回
+message SecurityEventReply {
+	repeated SecurityEventGrpc securityEvents = 1;
+	//安全事件的总数
+	int64 nums = 2;
+	// 待解决事件数
+	int64 toSolvedNums = 3;
+}
+
+message SecurityEventGrpc {
+	//序号
+	string index = 1;
+	//涉及单位
+	string department = 2;
+	//告警事件描述
+	string describe = 3;
+	//是否有最新的安全事件
+	bool eventFlag = 4;
+	//最新的发生时间
+	string warningTime = 5;
+	//告警是否解决状态（0：未解决，1：已解决）
+	string warningSloveState = 6;
+}
+
+
+//地图格式、返回用于画地图的数据
+message DrawingMapsForParameters {
+	repeated MapFormatSecurityArrayProtobuf securityArray = 1; //风险指标数组，用于画地图用
+	repeated MapFormatWarningArrayProtobuf warningArray = 2; //告警参数，用于画地图用
+	repeated MapFormatCenterIndexProtobuf centerIndexArray = 3; //分中心指标
+}
+
+message MapFormatSecurityArrayProtobuf {
+	string name = 1; //区域名称
+	string value = 2; //风险指标
+}
+
+message MapFormatWarningArrayProtobuf {
+	string localprovince = 1; //目的地
+	string remoteprovince = 2; //原地
+	string cutprovince = 3; //截断城市
+	string warningstate = 4; //是否报警
+}
+message MapFormatCenterIndexProtobuf{
+	string onlineRate = 1; //分中心在线率
+	string safetyCheckRate = 2; //分中心核规率
+	string safetyEventNums = 3; //分中心未解决安全事件数
+	string name = 4;//分中心名称
+	string secretRate = 5;//分中心密通率
+
+}
+//安防系统及设备在线状态
+message SecuritySystemStateForParameters {
+	repeated SecuritySystemStateProtobuf systemArray = 1; //设备数以及在线状态
+}
+
+message SecuritySystemStateProtobuf {
+	string name = 1; //设备名字
+	int32 value = 2; //数量
+	int32 flag = 3; //是否变红
+}
+// 大屏网络安全运行水平
+message ScreenSecretPassOnlineRateForParameters {
+	string allOnlineRate = 1; //全网在线率
+	string allSecretPass = 2; //全网密通率
+	string urgentWarningsCount = 3; //全网紧急告警数
+	string importantWarningsCount = 4; //全网重要告警数
+	string secrityDays = 5;//安全运行天数
+	repeated ScreenSecretPassOnlineRateProtobuf secretPassOnlineRateArray = 6; //在线率密通率
+	string onlineName = 7;//显示的名字是全网在线率还是辽宁省在线率
+	string secretPassName = 8; //显示的名字是全网密通率还是辽宁省密通率
+	string urgentWarningsName = 9; //显示的名字是全网紧急告警数还是辽宁省紧急告警数
+	string importantWarningsName = 10; //显示的名字是全网重要告警数还是辽宁省重要告警数
+
+}
+
+message ScreenSecretPassOnlineRateProtobuf {
+	string name = 1; //在线率密通率
+	string color = 2; //颜色
+	repeated string time = 3; //时间
+	repeated string value = 4; //值
+}
+//当日风险top10
+message ScreenDayRiskTOPTenForParameters {
+	repeated ScreenDayRiskTOPTenProtobuf dayRiskTOPTenArray = 1; //风险数组
+}
+
+message ScreenDayRiskTOPTenProtobuf {
+	string key = 1; //名字
+	string value = 2; //次数
+}
+
+
+//空参数
+message Void {
+} //地图格式、返回用于画地图的数据
+
+message OnDutyPersion{
+	repeated DutyPersion dutyPerson = 1;
+}
+
+message DutyPersion{
+	string position = 1;//员工职位 对应 OMS_DISPATCHERS position
+	string name = 2;//员工姓名 对应 OMS_DISPATCHERS name
+	string photoUrl=3; //员工图片名称 OMS_PERSONPHOTOREL PHOTOURL
+}
+
+message RiskWarningProto{
+	int32 count = 1;//风险预警总数
+	repeated RiskWarning riskWarn = 2; //风险预警列表
+}
+
+message RiskWarning{
+	string riskNo = 1;//预警编号
+	string riskLevel = 2; //预警级别
+	string riskName = 3; //预警名称
+	string riskRange = 4; //预警范围
+	string riskDate = 5;  //预警时间
+}
+
+//密通率及告警解决率 add jiabo
+message SecretPassAndWarnSolveReply{
+	repeated Circular circular = 1;//上面环状图
+	repeated Histogram histogram = 2;//下面柱状图
+}
+//上面环状图 add jiabo
+message Circular{
+	int32 warningNumber = 1;//告警数
+	string secretPass = 2;//密通率
+	string online = 3;//在线率
+	string name = 4;//分中心名称
+	int32 resolved = 5;//已解决
+}
+//下面柱状图 add jiabo
+message Histogram{
+	int32 unsolved = 1;//待解决
+	int32 resolved = 2;//已解决
+	string secretPass = 3;//密通率
+	string online = 4;//在线率
+	string name = 5;//省、地调名称
+}
+message AllDeviceNumsReplay{
+	repeated AllDeviceNums allDeviceNums =1;
+}
+message AllDeviceNums{
+	int32 num =1;//数量
+	string name=2;//名称
+}
+
+message TerraceDeviceNumberReply{
+	repeated Justable Justable  = 1 ;    // 调
+	int32    terraceDeviceNumber = 5 ;  //平台部署总数
+}
+message Justable {
+	string justableName = 1 ;   //名字
+	int32  justableNum  = 2 ;   //数量
+}
+
+message DeviceDeployReply{
+	repeated StationDeploy stationDeploy =1;//厂站部署
+	Substation substaion = 2;//变电站部署信息圆环
+	PowerPlant powerPlant = 3;//厂站部署信息圆环
+	string totalNum = 4;//部署装置厂站总数量
+}
+
+message StationDeploy{
+	string stationName = 1;//厂站名称
+	string totalDeployNum = 2;//应部署数量
+	string realDeployNum = 3 ;// 实际部署数量
+	string stationNum= 4;//各厂站对应个数
+}
+
+message Substation{
+	string subUndeploy =1 ;//变电站未部署数量
+	string subDeploy = 2;//变电站实际部署数量
+	string subSum =3 ;//变电站应部署总数
+	string subFinishRate =4 ;//变电站部署完成比例
+}
+
+message PowerPlant{
+	string powerUndeploy =1;//发电厂未部署数量
+	string powerDeploy = 2;//发电厂实际部署数量
+	string powerSum = 3; //发电厂应部署总数
+	string powerFinishRate =4;//发电站部署完成比例
+}
+
+message ZxDeviceWarnMsg{
+	repeated ZxDeviceWarn zxDeviceWarn = 1;
+}
+message ZxDeviceWarn{
+	string regionName = 1;//隔离纵向告警消缺横坐标
+	int32  solveNum = 2; //已解决
+	int32  unSolveNum = 3; //未解决
+}
+message TendencyOnWeekMsg{
+	repeated TendencyOnWeek tendencyOnWeek = 1;
+	int32 eventSum = 2; //告警总数
+}
+//典型事件一周
+message TendencyOnWeek{
+	string eventName = 1;//典型事件名称
+	int32 eventNum = 2; //典型事件告警个数
+}
+
+message GetChangeNumReplay{
+	repeated GetChangeNum changeNum = 1;
+}
+message GetChangeNum{
+	int32 num = 1;//数量
+	string name = 2;//变更名称
+}
+message GetTopFiveWarnReplay{
+	repeated GetTopFiveWarn topFiveWarn =1;
+}
+message GetTopFiveWarn{
+	int32 num = 1;//告警次数
+	string warntypeName = 2;//告警类型名称
+}
+//近一周核查情况 add by jiabo
+message VerificationCaseReply{
+	repeated VerificationCase verificationCase = 1;
+}
+//近一周核查情况 add by jiabo
+message VerificationCase{
+	string cycleDate = 1;//日期
+	int32 problemTunnel = 2;//问题隧道数
+	int32 problemStrategy = 3;//问题策略数
+}
+//各网省公司隧道、策略情况 add by jiabo
+message TunnelAndStrategyReply{
+	repeated TunnelAndStrategy tunnelAndStrategy = 1;
+}
+//各网省公司隧道、策略情况 add by jiabo
+message TunnelAndStrategy{
+	string name = 1;//公司名称
+	int32 equipVerified = 2;//已核查设备数
+	string propStrategyProblems = 4;//策略问题占比
+	string propTunnelProblems= 5;//隧道问题占比
+	int32 problemsNumber = 6;//问题总数
+}
+message ProtectionNumberReply{
+	repeated Protection protection  = 1 ;    // 调
+
+}
+message Protection {
+	string protectionName = 1 ;                         //名字
+	int32  protectionNum  = 2 ;                         //数量
+}
+message EquipmentNumberReply{
+	repeated Equipment equipment  = 1 ;    // 调
+
+}
+message Equipment {
+	string equipmentName = 1 ;                        //名字
+	int32  lengthwaysNum  = 2 ;                      //纵向数量
+	int32  quarantineNum  = 3 ;                     //隔离数量
+}
+message SecretTopTenReply{
+	repeated SecretTopTen secretTopTen =1 ;//密通情况top10
+}
+
+message SecretTopTen{
+	string rank = 1; //排名
+	string unit = 2;//单位
+	string secretPassRate =3 ;//密通率
+	string onlineRate =4 ;//在线率
+	string breakNum =5 ;//中断次数
+}
+
+message SecurityAnalasisReply{
+	repeated SecurityAnalasis securityAnalasis =1 ;//安全事件分析
+}
+
+message SecurityAnalasis{
+	string xdate = 1 ;// 日期
+	string wnum0 = 2 ;//紧急告警数
+	string wnum1 = 3 ;//重要告警数
+}
+
+message ZxSurveillanceMsg{
+	repeated ZxSurveillance zxSurveillance = 1;
+}
+message ZxSurveillance{
+	string surveillanceName = 1 ;//纵向合规的名字
+	string surveillanceRate = 2 ;//纵向合规占比
+}
+message SurveillanceRegionMsg{
+	repeated SurveillanceRegion surveillanceRegion = 1;
+}
+message SurveillanceRegion{
+	string surveillanceRegion = 1 ;//合规情况区域
+	int32 surveillanceNum = 2 ;//合规情况区域数量
+}
+
+message VulnerabilityCircleReply{
+	repeated VulnerabilityCircle circle =1;
+}
+message VulnerabilityCircle{
+	int32 num =1;
+	string bugType=2;
+}
+message VulnerabilityListReply{
+	repeated VulnerabilityList vulnerabilityList =1;
+}
+message VulnerabilityList{
+	int32 index =1;
+	string bugType =2;
+	string ip = 3;
+	string deviceType =4;
+	string deviceName = 5;
+}
+message ComplianceReply{
+	repeated Compliance compliance =1 ;//合规
+}
+
+message Compliance{
+	string complianceName = 1 ;// 合规名称
+	int32 complianceNum = 2 ;//合规数量
+
+}
+message ComplianceStatisticsReply{
+	repeated ComplianceStatistics complianceStatistics =1 ;//合规详情
+}
+
+message ComplianceStatistics{
+	string complianceStatisticsName = 1 ;// 合规问题名称
+	string complianceStatisticsIp = 2 ;//设备IP
+	string complianceStatisticsType = 3 ;//设备类型
+	string complianceName = 4 ;//名称
+	string complianceStatisticsState = 5 ;//处置状态
+}
+
+//全网安全核查情况 add by jiab
+message NetSecurityVerificaReply{
+	ComplianceAndLeakage complianceAndLeakage = 1;
+}
+message ComplianceAndLeakage{
+	string leakageRate = 1;//漏扫率
+	string complianceRate = 2;//合规率
+	int32 ncomplianceTotal = 3;//不合规总数
+	int32 holesTotal = 4;//漏洞总数
+	int32 total = 5;//配置总数
+	int32 failureCompliance = 6;//漏洞扫描不合规主机设备数
+	int32 compliance = 7;//合规数
+	int32 vulnerabiAssets = 8;//漏洞资产数
+}
+//全网安全核查情况-地图中数据 add by jiabo
+message NetSecurityVerificaMapReply{
+	repeated NetSecurityVerificaMap netSecurityVerificaMapCenter =1 ;//分中心数据
+	repeated NetSecurityVerificaMap netSecurityVerificaMapProvince =2 ;//网省数据
+}
+message NetSecurityVerificaMap{
+	string name = 1;//单位名称
+	int32 noCompliance = 2;//不合规数量
+	int32 leakage = 3;//漏洞数量
+}
+//单位核查top10
+message UnitsVerificationReply{
+	repeated UnitsVerification unitsVerification =1 ;//单位核查
+}
+message UnitsVerification{
+	string name = 1;//单位名称
+	string complianceRate = 2;//合规率
+	string leakageRate = 3;//漏扫率
+}
+//I/II/III区漏洞 左图  add dongl
+message LeftSecurityFlawReply{
+	repeated NumOneAreaLeft numOneAreaLeft = 1;
+	repeated NumTwoAreaLeft numTwoAreaLeft =2;
+	repeated NumThreeAreLeft numThreeAreaLeft =3;
+}
+
+message NumOneAreaLeft{
+	string flawLevel = 1 ;//漏洞级别 高、中、低
+	string flawNum = 2 ; //漏洞数量
+}
+
+message NumTwoAreaLeft{
+	string flawLevel = 1 ;//漏洞级别 高、中、低
+	string flawNum = 2 ; //漏洞数量
+}
+
+message NumThreeAreLeft{
+	string flawLevel = 1 ;//漏洞级别 高、中、低
+	string flawNum = 2 ; //漏洞数量
+}
+
+//I/II/III区漏洞 右图  add dongl
+message RightSecurityFlawReply{
+	repeated NumOneAreaRight numOneAreaRight = 1;
+	repeated NumTwoAreaRight numTwoAreaRight =2;
+	repeated NumThreeAreRight numThreeAreaRight =3;
+}
+
+message NumOneAreaRight{
+	string flawType = 1 ;//漏洞类型
+	string flawNum = 2 ; //漏洞数量
+	string orderNum =3 ; //序号
+}
+
+message NumTwoAreaRight{
+	string flawType = 1 ;//漏洞类型
+	string flawNum = 2 ; //漏洞数量
+	string orderNum =3 ; //序号
+}
+
+message NumThreeAreRight{
+	string flawType = 1 ;//漏洞类型
+	string flawNum = 2 ; //漏洞数量
+	string orderNum =3 ; //序号
+}
+
+message AllNetWorkMsg{
+	repeated AllNetWork allNetWork  = 1 ;
+
+}
+message AllNetWork {
+	string regionName = 1 ; //地域名称
+	int32  solvedNum  = 2 ; //解决数量
+	int32  confirmNum  = 3 ; //确认数量
+	int32  solveStatSum = 4 ; //合计
+}
+
+//安全风险处置和监测top10
+message SafetyRiskManageAndTestReply{
+	repeated SafetyRiskManageAndTest safetyRiskManageAndTest =1 ;//安全风险处置和监测top10
+}
+message SafetyRiskManageAndTest{
+	string name = 1;//机构名称
+	int32 number = 2;//次数
+}
+//告警分布
+message AlarmDistributionReply{
+	repeated AlarmDistributionSafe alarmDistributionSafe = 1 ;//安全区告警
+	repeated AlarmDistributionEquipment alarmDistributionEquipment = 2 ;//设备告警
+}
+
+message AlarmDistributionSafe{
+	string alarmDistributionSafeName = 1 ;// 安全区名称
+	int32 alarmDistributionSafeNum = 2 ;//安全区数量
+}
+
+message AlarmDistributionEquipment{
+	string alarmDistributionEquipmentName = 1 ;//设备名称
+	int32 alarmDistributionEquipmentNum = 2 ;//设备数量
+}
+//TOP 5
+message AlarmEquipmentTopFiveReply{
+	repeated AlarmEquipment AlarmEquipment = 1 ;//安全区告警
+}
+message AlarmEquipment{
+	string alarmEquipmentName = 1 ;//设备名称top5
+	int32 alarmEquipmentNum = 2 ;//设备数量top5
+}
+//主站告警分布 add dongl
+message MainStationAlarmDistributionReply{
+	repeated MainStationAlarmDistribution mainStationAlarmDistribution =1; //主站告警分布折线图
+	DistributionBanner distributionBanner = 2; //主站告警分布文字下方方框
+}
+//主机告警分布折线图  add dongl
+message MainStationAlarmDistribution{
+	string xdate = 1; //横坐标日期
+	string masterNum = 2;//主机告警数
+	string netNum =3 ;//网络告警数
+	string safetyNum =4 ;//安防告警数
+	string dbNum =5;//数据库数
+}
+//主站告警分布文字下方方框 add dongl
+message DistributionBanner{
+	string masterNum = 1;//主机告警数
+	string netNum =2 ;//网络告警数
+	string safetyNum =3 ;//安防告警数
+	string dbNum =4;//数据库数
+}
+//厂站告警分布 add dongl
+message SubStationAlarmDistributionReply{
+	repeated SubStationAlarmDistribution subStationAlarmDistribution =1 ;//电厂告警分布折线图
+}
+
+message SubStationAlarmDistribution{
+	string xdate =1;//横坐标日期
+	string substationNum = 2;//变电站告警数
+	string powerPlantNum =3 ;//电厂告警数
+}
+message WarnFigureReply{
+	repeated WarnFigure  todayFigure =1;
+	repeated WarnFigure  yestodayFiture = 2;
+}
+message WarnFigure{
+	int32 period =1;//时间点
+	int32 nums = 2;//这个时间段的数量
+	string date = 3;//当天日期
+}
+message SecurityRiskReply{
+	repeated SecurityRisk securityRisk=1;
+}
+message SecurityRisk{
+	string name = 1;//调度机构
+	string content = 2;//告警描述
+	string alarmTime = 3;//告警时间
+	string confirmstate = 4;//告警状态
+	string alarmLevel = 5;//告警级别
+	string isNew = 6;//是否有最新的安安全风险
+}
+message AccessMonitoringReplay{
+	repeated AccessMonitoring monitor =1;
+	int32 usbNum =2;//usb数
+	int32 cdRomNum =3;//光驱数
+	int32 serialNum =4;//串口数
+	int32 parallelNum =5;//并口数
+}
+message AccessMonitoring{
+	int32 index=1;//序号
+	string devicename =2;//设备名称
+	string usb=3;//usb
+	string cdRom =4;//光驱
+	string 	serialPort =5;//串口
+	string parallelPort =6;//并口
+}
+message HighRiskSurveillanceReply{
+	repeated HighRiskSurveillance risk =1;
+}
+message HighRiskSurveillance{
+	int32 index=1;//序号
+	string deviceName =2;//设备名称
+	string serciceName =3;//服务名称
+	string port =4;//端口
+}
+//VisitTimesReply
+message VisitTimesReply{
+	repeated VisitTimes visitTimes=1;
+}
+message VisitTimes{
+	string ip = 1;//ip
+	int32 localnum = 2;//本机登入次数
+	int32 sshnum = 3;//ssh登入次数
+	string type = 4;//访问类型
+}
+//AccessControlsReply
+message AccessControlsReply{
+	repeated AccessControls accessControls=1;
+}
+message AccessControls{
+	string name = 1;//访问管控名字
+	int32 num = 2;//访问管控数字
+}
+//重要业务主机状态 add by jiabo
+message ImportantBusinessHostStatusReply{
+	ImportantBusinessHostStatusOne importantBusinessHostStatusOne = 1;//安全1区
+	ImportantBusinessHostStatusTwo importantBusinessHostStatusTwo = 2;//安全2区
+	ImportantBusinessHostStatusThree importantBusinessHostStatusThree = 3;//安全3区
+}
+//安全1区
+message ImportantBusinessHostStatusOne{
+	repeated ImportantBusinessHostStatus importantBusinessHostStatus = 1;//资产
+}
+//安全2区
+message ImportantBusinessHostStatusTwo{
+	repeated ImportantBusinessHostStatus importantBusinessHostStatus = 2;//资产
+}
+//安全3区
+message ImportantBusinessHostStatusThree{
+	repeated ImportantBusinessHostStatus importantBusinessHostStatus = 1;//资产
+}
+//重要业务主机状态 add by jiabo
+message ImportantBusinessHostStatus{
+	string ip = 1;//主机IP
+	string name = 2;//主机名称
+	string businessName = 3;//业务名称
+	int32 status = 4;//主机状态
+	string businessId = 5;//业务ID
+	string businessTitle = 6;//业务标题
+	string id = 7;//主机ID
+}
+
+message InputReply{
+	InputAreaNum inputAreaNum = 1;//一区接入数量、二区接入数量、三区接入数量
+	InputAreaPercent inputAreaPercent =2 ;//一区百分比、二区百分比、三区百分比
+}
+
+message InputAreaNum{
+	string numOneCount = 1;//一区数量
+	string numTwoCount = 2;
+	string numThreeCount = 3;
+}
+
+message InputAreaPercent{
+	string numOnePercent =1; //一区百分比
+	string numTwoPercent =2;
+	string numThreePercent =3 ;
+}
+
+message CheckCountReply{
+	string unCompliance = 1;//不合规项
+	string safetyFlaw =2;//安全漏洞
+	string weakPass =3 ;//弱口令
+	string unComPercent = 4;//不合规项百分比，向上取整不带百分号 例2.1%取值为3%，返给前端数字3
+	string safetyPercent =5;//安全漏洞百分比
+	string weakPassPercent = 6;//弱口令百分比
+}
+message SystemAndAgentReply{
+	repeated SystemAndAgent system = 1;
+	int32 total = 2;
+}
+message SystemAndAgent{
+	string name =1;
+	string verion = 2;
+	string parent=3;
+	int32 value =4;
+}
+

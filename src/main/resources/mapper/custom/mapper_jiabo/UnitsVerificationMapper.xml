@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.jiabo.UnitsVerificationDao">
+    <select id="getUnitsVerification" resultType="com.CrossCountry.Survey.modelvo.jiabo.UnitsVerificationPo">
+        <!--SELECT
+                LOCAL_NAME AS name,
+                decode((CVSLEGALNUM+CVSILEGALNUM),0,0,Convert(decimal(18,1),(CVSLEGALNUM/(CVSLEGALNUM+CVSILEGALNUM))*100)) AS complianceRate,
+                decode(VBSNUM,0,0,Convert(decimal(18,1),((VBSNUM-VBSILEGALNUM)/VBSNUM)*100)) AS leakageRate
+        FROM
+                LSV_CHECKAMOUNT_TOP_VIEW
+        WHERE  LOCAL_NAME != '国调中心'
+        ORDER BY
+            <if test="name == '0'.toString()">
+                complianceRate DESC
+            </if>
+            <if test="name == '1'.toString()">
+                leakageRate DESC
+            </if>-->
+        SELECT
+        name,
+        complianceRate,
+        leakageRate
+        FROM(
+        SELECT
+        name,
+        complianceRate,
+        leakageRate,
+        scanComplRate,
+        tunnelComplRate,
+        (complianceRate*0.5+leakageRate*0.5) AS verifIndicat
+        FROM
+        (
+        SELECT
+        LOCAL_NAME AS name,
+        decode((CVSLEGALNUM+CVSILEGALNUM),0,0,Convert(decimal(18,1),(CVSLEGALNUM/(CVSLEGALNUM+CVSILEGALNUM))*100)) AS complianceRate,
+        decode(VBSNUM,0,0,Convert(decimal(18,1),((VBSNUM-VBSILEGALNUM)/VBSNUM)*100)) AS leakageRate,
+        decode(SCANNUM,0,0,Convert(decimal(18,1),((SCANNUM-SCANILEGALNUM)/SCANNUM)*100)) AS scanComplRate,
+        decode(POLICYNUM,0,0,Convert(decimal(18,1),((POLICYNUM-POLICYILEGALNUM)/POLICYNUM)*100)) AS tunnelComplRate
+        FROM
+        LSV_CHECKAMOUNT_TOP_VIEW
+        WHERE
+        LOCAL_NAME != '国调中心'
+        )
+        ORDER BY
+        verifIndicat DESC
+        )
+    </select>
+</mapper>

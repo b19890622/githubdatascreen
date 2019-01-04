@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.shichf.ScreenDayRiskTOPTenDao">
+    <resultMap id="BaseResulRiskMap" type="com.CrossCountry.Survey.modelvo.shichf.ScreenDayRiskTOPTenEntity" >
+        <result column="alarmType" property="alarmType" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+     <select id="getScreenDayRiskTOPTenEntityList" resultMap="BaseResulRiskMap">
+    	select ALARMTYPE as alarmType, sum(count) as count from (
+    	select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a,
+(select WARNINGLEVEL,PROVINCE_NAME,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REALTIME_WARNING) b 
+		where a.PLATFORMTYPE = b.PLATFORMTYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE  and b.WARNINGLEVEL != 2 group by a.ALARMTYPE
+		union 
+		select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE)  a,
+                (select WARNINGLEVEL,PROVINCE_NAME,DEVICETYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REATTIME_SAFETYENENT) b 
+		where a.PLATFORMTYPE = b.DEVICETYPE and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE and b.WARNINGLEVEL != 2  group by a.ALARMTYPE	
+		)
+		group by alarmType
+	</select>
+	
+	<resultMap id="BaseResulRiskLowMap" type="com.CrossCountry.Survey.modelvo.shichf.ScreenDayRiskTOPTenEntity" >
+        <result column="alarmType" property="alarmType" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+     <select id="getScreenDayRiskTOPTenEntitylowList" resultMap="BaseResulRiskLowMap">
+    	select a.ALARMTYPE as alarmType, count(a.ALARMTYPE) as count from 
+		(select distinct  ALARMTYPE,PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE)  a,(select WARNINGLEVEL,PROVINCE_NAME,DEVICETYPE,LOGTYPE,SUBLOGTYPE, WARNINGSTARTTIME
+from REATTIME_SAFETYENENT) b 
+		where a.PLATFORMTYPE = b.DEVICETYPE  and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+		and a.LOGTYPE = b.LOGTYPE and a.SUBLOGTYPE = b.SUBLOGTYPE and b.WARNINGLEVEL != 2  
+		<if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		</if>
+		group by a.ALARMTYPE
+	</select>
+	
+	<resultMap id="BaseResulRiskUnitLowMap" type="com.CrossCountry.Survey.modelvo.shichf.ScreenDayRiskTOPTenEntity" >
+        <result column="alarmType" property="alarmType" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="getScreenDayRiskUnitTOPTenEntitylowList" resultMap="BaseResulRiskUnitLowMap">
+		SELECT b.LOCAL_NAME as alarmType, COUNT (1) as count 
+        FROM 
+                (select distinct  PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+                from THREAT_GROUP_LOGSUBTYPE) a, 
+                REATTIME_SAFETYENENT b 
+        WHERE 
+                a.PLATFORMTYPE = b.DEVICETYPE 
+            and a.LOGTYPE       = b.LOGTYPE 
+            and a.SUBLOGTYPE    = b.SUBLOGTYPE 
+            and a.SECURITYEVENT = 1 and b.CONFIRMSTATE != 2  and b.WARNINGLEVEL != 2 
+            and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and ((remoteProvince is not null and remoteProvince != 'NULL' AND remoteProvince != 'null' 
+            and localProvince is not null and localProvince != 'NULL' and localProvince != 'null') 
+            or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince = 'null') 
+            and (localProvince is null or localProvince = 'NULL' or localProvince = 'null'))) 
+        <if test="name!=null and name !='' ">
+		AND PROVINCE_NAME = #{name,jdbcType=VARCHAR} 
+		AND LOCAL_NAME != #{name,jdbcType=VARCHAR} 
+		</if>    
+            group by b.PROVINCE_NAME,b.LOCAL_NAME order by count desc limit 10
+	</select>
+	
+	
+    <resultMap id="BaseResulRiskUnitMap" type="com.CrossCountry.Survey.modelvo.shichf.ScreenDayRiskTOPTenEntity" >
+        <result column="alarmType" property="alarmType" jdbcType="VARCHAR" />
+        <result column="count" property="count" jdbcType="INTEGER" />
+    </resultMap>
+    <select id="getScreenDayRiskUnitTOPTenEntityList" resultMap="BaseResulRiskUnitMap">
+    	select d.name as alarmType,(c.EMERGNUM + c.ERRNUM) as count  
+		from jsqy a,monitorobject b,
+		(select ID,SUM(EMERGNUM) as EMERGNUM, SUM(ERRNUM) as ERRNUM 
+		FROM data_upreportrealtimestatistics
+		group by ID) c, 
+		map_region d
+		where a.regional = b.regional and b.id = c.id and a.xzid = d.indexid  
+		order by count desc limit 10
+	</select>  
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper namespace="com.CrossCountry.Survey.mapper.dongl.MainStationAlarmDistributionDao">
+
+	<select id="getViewMainStationEntity"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.ViewMainStationEntity">
+		
+	select 
+        decode (a.devicetpye,1,'主机',2,'网络设备',3,'数据库',4,'安防设备') as deviceType, 
+        warn_time                                                  as xdate, 
+        ISNULL(TIMES, 0)                                   as warnNum 
+from 
+        ( 
+        select 
+                devicetpye, 
+                max(devicetpyename) as devicetpyename 
+        from 
+                state_monitorobjecttype_table 
+        where 
+                devicetpye in (1,2,3,4) 
+        group by 
+                devicetpye 
+        ) 
+        a 
+left join 
+        ( 
+        select 
+                * 
+        from 
+                LVS_MAINSTATION_WARNING 
+        where 
+                1=1 
+            <if test="curstart!=null and curend!=''">
+			and warn_time &gt;=#{curstart,jdbcType = VARCHAR}
+		</if>
+            <if test="curend!=null and curend!=''">
+			and warn_time &lt;=#{curend,jdbcType = VARCHAR}
+		</if>
+        ) 
+        b 
+on 
+        b.devicetype = a.devicetpye 
+ORDER BY 
+        DEVICETPYE;
+
+	</select>
+
+	<select id="getViewMainStationBannerEntity"
+		resultType="com.CrossCountry.Survey.modelvo.dongl.ViewMainStationBannerEntity">
+	select decode (DEVICETYPE,1,'主机',2,'网络设备',3,'数据库',4,'安防设备') as deviceType,TIMES as xdate,WARN_TIME as warnNum FROM LVS_MAINSTATION_WARNING
+		where Times=   to_char(sysdate,'yyyy-mm-dd')   
+	</select>
+
+
+
+</mapper>

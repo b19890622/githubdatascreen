@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.MenaceMonitorDao">
+
+
+	<select id="getChangeRed"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.ChangeRed">
+		<!--  select a.REMARK as remark,a.REGIONAL as regional ,a.shortname
+		AS shortname,a.VOLTAGECLASS as voltageclass,c.WARNINGTIME as
+		warningtimes,c.WARNINGLEVEL as warningType   
+		from (select distinct j.REMARK as REMARK ,j.REGIONAL as REGIONAL,
+		j.shortname as shortname,j.voltageclass as voltageclass from JSQY j 
+		where VOLTAGECLASS BETWEEN 3 and 7 or VOLTAGECLASS BETWEEN 8 and 18) a
+		left JOIN (select r.REGIONAL as REGIONAL,  MAX(r.WARNINGSTARTTIME) as WARNINGTIME,
+		MIN(r.WARNINGLEVEL) as WARNINGLEVEL 
+		from REALTIME_WARNING r,(select REGIONAL,WARNINGLEVEL,max(WARNINGTIME) as
+		warningtimes from REALTIME_WARNING where WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd') 
+		and WARNINGLEVEL IN (0,1) group by REGIONAL,WARNINGLEVEL) b 
+		where r.WARNINGTIME = b.warningtimes and r.REGIONAL = b.REGIONAL and r.WARNINGLEVEL = b.WARNINGLEVEL
+		group by r.REGIONAL ) c
+		ON a.REGIONAL = c.REGIONAL-->
+		select a.REMARK as remark,a.REGIONAL as regional ,a.shortname
+		AS shortname,a.VOLTAGECLASS as voltageclass,c.WARNINGTIME as
+		warningtimes,c.WARNINGLEVEL as warningType   
+		from (select distinct j.REMARK as REMARK ,j.REGIONAL as REGIONAL,
+		j.shortname as shortname,j.voltageclass as voltageclass from JSQY j 
+		where VOLTAGECLASS BETWEEN 3 and 7 or VOLTAGECLASS BETWEEN 8 and 18) a
+		left JOIN (select r.REGIONAL as REGIONAL,  MAX(r.WARNINGSTARTTIME) as WARNINGTIME,
+		MIN(r.WARNINGLEVEL) as WARNINGLEVEL 
+		from REALTIME_WARNING r,(select 
+		REGIONAL,WARNINGLEVEL,max(WARNINGSTARTTIME) as
+		warningtimes
+		FROM
+		(select distinct
+		PLATFORMTYPE,LOGTYPE,SUBLOGTYPE,SECURITYEVENT
+		from THREAT_GROUP_LOGSUBTYPE) a,
+		REALTIME_WARNING b
+		WHERE
+		a.PLATFORMTYPE =
+		b.PLATFORMTYPE
+		and
+		a.LOGTYPE = b.LOGTYPE
+		and
+		a.SUBLOGTYPE = b.SUBLOGTYPE
+		and
+		a.SECURITYEVENT = 1  and b.CONFIRMSTATE != 3 and WARNINGLEVEL IN (0,1) 
+		and b.WARNINGSTARTTIME >= to_char(sysdate,'yyyy-MM-dd')
+		and
+		((remoteProvince is not null and remoteProvince != 'NULL' AND
+		remoteProvince != 'null'
+		and localProvince is not null and localProvince != 'NULL' and
+		localProvince != 'null')
+		or ((remoteProvince is null or remoteProvince = 'NULL' or remoteProvince
+		= 'null')
+		and (localProvince is null or localProvince = 'NULL' or localProvince =
+		'null'))) 
+		group by REGIONAL,WARNINGLEVEL) d 
+		where r.WARNINGTIME = d.warningtimes and r.REGIONAL = d.REGIONAL and r.WARNINGLEVEL = d.WARNINGLEVEL
+		group by r.REGIONAL ) c
+		ON a.REGIONAL = c.REGIONAL
+	</select>
+	<select id="getCircleRed"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.CircleRed">
+		select A.REMARK as remark ,A.REGIONAL as regional
+		,shortname as shortname,A.VOLTAGECLASS as coltageclass
+		from JSQY A
+		,
+		MONITOROBJECT B ,REALTIME_WARNING C where
+		A.REGIONAL = B.REGIONAL
+		and
+		B.ID = C.ID
+		and warningtime BETWEEN #{oldDateTime,jdbcType=DATE} AND
+		#{newDateTime}
+	</select>
+	<select id="getLargen"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.Largen">
+		select A.REMARK as remark,A.REGIONAL as regional ,shortname
+		as shortname,
+		A.VOLTAGECLASS as voltageclass ,C.REMOTELOCAL as
+		remotelocal
+		from JSQY A
+		JOIN MONITOROBJECT B
+		ON A.REGIONAL = B.REGIONAL
+		left JOIN REALTIME_WARNING C
+		ON B.REGIONAL = C.REGIONAL
+		where C.ID is
+		not null
+		and C.WARNINGLEVEL IN (0,1)
+		and A.VOLTAGECLASS BETWEEN 3 and 7
+		or A.VOLTAGECLASS BETWEEN 8 and 18
+		and REMOTEPROVINCE = '国调中心'
+	</select>
+	<select id="getPower"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.Power">
+		select Remark ,REGIONAL as regional,shortname,VOLTAGECLASS
+		from JSQY
+		where VOLTAGECLASS BETWEEN 3 and 7 or VOLTAGECLASS BETWEEN 8
+		and 18
+	</select>
+	<select id="getRedWire"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.RedWire">
+		select remark as nodename, 
+		case when count(1)> 0 then 0 else 1 end as DEVICESTATE
+		from realtime_warning a, monitorobject b, jsqy c
+		where a.id = b.id and b.regional = c.regional 
+		and content like '%中断，已%'
+		group by remark
+	</select>
+</mapper>

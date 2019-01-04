@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.ComplianceStatisticsDao">
+
+	<select id="getComplianceStatistics" resultType="com.CrossCountry.Survey.modelvo.donggs.ComplianceStatisticsPo">
+	SELECT a.CHECKITEMNAME AS complianceStatisticsName,
+    a.IP AS complianceStatisticsIp ,
+    a.ISCHECK AS complianceStatisticsState,
+    a.NAME AS complianceName,
+    a.REMARK AS complianceStatisticsType
+    FROM LSV_BHGXQ_VIEW a 
+	</select>
+</mapper>

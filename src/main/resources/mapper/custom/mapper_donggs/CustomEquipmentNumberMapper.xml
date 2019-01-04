@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--命名空间应该是对应接口的包名+接口名 -->
+<mapper
+	namespace="com.CrossCountry.Survey.mapper.donggs.EquipmentNumberDao">
+
+	<select id="getEquipment"
+		resultType="com.CrossCountry.Survey.modelvo.donggs.EquipmentNumber">
+		select ISNULL(a.VEADCOUNT,0) as lengthwaysNum ,
+		ISNULL(a.FBIDCOUNT,0) AS quarantineNum ,
+		a.NAME AS equipmentName 
+		from LSV_SECURIITYDEVICENUM_VIEW a
+		join LSV_PROVINCE_REGIONAL_VIEW b
+		on a.name = b.name 
+		where a.NAME  not  like '%分中心%'
+		order by ORDER_INDEX
+	</select>
+
+</mapper>
