@@ -21,4 +21,21 @@
         ORDER BY
                 ORDER_INDEX
     </select>
+    <select id="getSafetyRiskManageSupp" resultType="com.CrossCountry.Survey.modelvo.jiabo.SafetyRiskManageAndTestPo">
+        SELECT TOP ${suppNum}
+        NAME AS name,
+        0           AS number
+        FROM
+        LSV_PROVINCE_REGIONAL_VIEW
+        WHERE 1=1
+        <if test="listName!=null">
+            AND NAME not in
+            <foreach collection="listName" item="name"
+                     index="index" open="(" close=")" separator=",">
+                #{name,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        ORDER BY
+        ORDER_INDEX
+    </select>
 </mapper>
