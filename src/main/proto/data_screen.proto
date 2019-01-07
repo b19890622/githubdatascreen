@@ -194,6 +194,11 @@ service DataScreenHostProtectionService{
 	rpc bidSystemAndAgentCount(stream StateGridRequest) returns (stream SystemAndAgentReply){}
 }
 
+//安全技术监督
+service DataSafetyTechnicalSupervisionService{
+
+}
+
 
 
 // The request message containing the user's name.

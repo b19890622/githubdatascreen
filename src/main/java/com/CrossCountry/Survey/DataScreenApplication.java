@@ -3,18 +3,13 @@ package com.CrossCountry.Survey;
 
 import java.util.concurrent.CountDownLatch;
 
+import com.CrossCountry.Survey.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.CrossCountry.Survey.service.CommonBorderProtectionService;
-import com.CrossCountry.Survey.service.CommonHostProtectionService;
-import com.CrossCountry.Survey.service.CommonNetWorkService;
-import com.CrossCountry.Survey.service.CommonService;
-import com.CrossCountry.Survey.service.CommonSurveillanceService;
-import com.CrossCountry.Survey.service.CommonVerificationService;
 import com.CrossCountry.Survey.thirdparty.GoogleCacheUtils;
 import com.CrossCountry.Survey.utils.StaticConfig;
 
@@ -38,6 +33,8 @@ public class DataScreenApplication implements CommandLineRunner{
 	CommonSurveillanceService commonSurveillanceService;
 	@Autowired
 	CommonHostProtectionService commonHostProtectionService;
+	@Autowired
+	CommonSafetyTechSuperService commonSafetyTechSuperService;
 	@Autowired
 	GoogleCacheUtils cacheUtils;
 	
@@ -81,6 +78,7 @@ public class DataScreenApplication implements CommandLineRunner{
 	    		  .addService(ServerInterceptors.intercept(commonSurveillanceService, new HeaderServerInterceptor()))
 	    		  .addService(ServerInterceptors.intercept(commonVerificationService, new HeaderServerInterceptor()))
 	    		  .addService(ServerInterceptors.intercept(commonHostProtectionService, new HeaderServerInterceptor()))
+				  .addService(ServerInterceptors.intercept(commonSafetyTechSuperService, new HeaderServerInterceptor()))
 	                .build();
 	        server.start();
 	        Runtime.getRuntime().addShutdownHook(new Thread() {
